@@ -3,8 +3,7 @@
 <div align="center">
   <img src="images/screenshot.png" alt="Playlist Length Checker Interface" width="600"/>
 
-**🚀 [Live Demo](#) 🚀**
-
+**🚀 [Live Demo](https://yt-playlist-length-checker.vercel.app/) 🚀**
 </div>
 
 A simple tool to analyze YouTube playlists, showing total duration, number of videos, and estimated completion times at different playback speeds.
