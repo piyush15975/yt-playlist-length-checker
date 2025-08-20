@@ -70,5 +70,3 @@ A simple tool to analyze YouTube playlists, showing total duration, number of vi
 3. View results including total duration, number of videos, and estimated finish times at different speeds
 
 ---
-
-**Built with ❤️ using Next.js and YouTube API**
