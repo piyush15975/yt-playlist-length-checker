@@ -23,7 +23,7 @@ A simple tool to analyze YouTube playlists, showing total duration, number of vi
 
    ```bash
    git clone https://github.com/piyush15975/yt-playlist-length-checker.git
-   cd youtube-playlist-length-checker
+   cd yt-playlist-length-checker
    npm install
    ```
 
