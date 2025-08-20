@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -23,38 +22,41 @@ export default function InputForm({ onSubmit, loading = false }: InputFormProps)
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 px-4 sm:px-0">
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-2 mb-4">
           <Link2 className="w-5 h-5 text-red-400" />
-          <h3 className="text-2xl font-semibold text-white">Enter Playlist URL</h3>
+          <h3 className="text-xl sm:text-2xl font-semibold text-white">
+            Enter Playlist URL
+          </h3>
           <Sparkles className="w-5 h-5 text-yellow-400 animate-pulse" />
         </div>
-        <p className="text-slate-400">Paste any YouTube playlist URL to get detailed analytics</p>
+        <p className="text-slate-400 text-sm sm:text-base">
+          Paste any YouTube playlist URL to get detailed analytics
+        </p>
       </div>
-
       <div className="relative group">
         <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-600/20 rounded-xl blur-xl group-hover:blur-2xl transition-all duration-300 opacity-0 group-hover:opacity-100"></div>
-        <div className="relative flex gap-3">
+        <div className="relative flex flex-col sm:flex-row gap-3">
           <div className="flex-1 relative">
-            <Input
-              type="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://www.youtube.com/playlist?list=..."
-              className="h-14 text-lg bg-slate-800/50 border-slate-600/50 text-white placeholder:text-slate-400 focus:border-red-500/50 focus:ring-red-500/20 rounded-xl transition-all duration-300"
-              disabled={loading}
-              required
-            />
-            <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
-              <Link2 className="w-5 h-5 text-slate-400" />
-            </div>
-          </div>
-
+  <Input
+    type="url"
+    value={url}
+    onChange={(e) => setUrl(e.target.value)}
+    placeholder="https://www.youtube.com/playlist?list=..."
+    className="h-12 sm:h-14 text-base sm:text-lg bg-slate-800/50 border-slate-600/50 text-white placeholder:text-slate-400 focus:border-red-500/50 focus:ring-red-500/20 rounded-xl transition-all duration-300 w-full pr-12" 
+    // 👆 added pr-12 so text doesn’t collide with icon
+    disabled={loading}
+    required
+  />
+  <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+    <Link2 className="w-5 h-5 text-slate-400" />
+  </div>
+</div>
           <Button
             type="submit"
             disabled={loading || !url.trim()}
-            className="h-14 px-8 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-red-500/25"
+            className="h-12 sm:h-14 px-6 sm:px-8 w-full sm:w-auto bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-red-500/25"
           >
             {loading ? (
               <div className="flex items-center gap-2">
@@ -70,9 +72,10 @@ export default function InputForm({ onSubmit, loading = false }: InputFormProps)
           </Button>
         </div>
       </div>
-
       <div className="text-center">
-        <p className="text-sm text-slate-500">Example: https://www.youtube.com/playlist?list=PLrAXtmRdnEQy4Qy...</p>
+        <p className="text-xs sm:text-sm text-slate-500 break-all">
+          Example: https://www.youtube.com/playlist?list=PLrAXtmRdnEQy4Qy...
+        </p>
       </div>
     </form>
   )
