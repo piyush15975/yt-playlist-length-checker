@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎵 YouTube Playlist Length Checker
 
-## Getting Started
+<div align="center">
+  <img src="images/screenshot.png" alt="Playlist Length Checker Interface" width="600"/>
 
-First, run the development server:
+**🚀 [Live Demo](#) 🚀**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+</div>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+A simple tool to analyze YouTube playlists, showing total duration, number of videos, and estimated completion times at different playback speeds.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ✨ Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* ⏱️ **Total Duration** - Calculate the full length of any YouTube playlist
+* 🎬 **Video Count** - Know the total number of videos in a playlist
+* ⚡ **Playback Estimates** - See when the playlist will finish at 1.25x, 1.5x, 1.75x, and 2x speeds
+* 🚀 **Instant Analysis** - Fetch data directly from YouTube using API key
+* 🎨 **Clean UI** - Modern and responsive design with Tailwind CSS
 
-## Learn More
+## 🚀 Quick Start
 
-To learn more about Next.js, take a look at the following resources:
+1. **Clone & Install**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   git clone https://github.com/piyush15975/yt-playlist-length-checker.git
+   cd youtube-playlist-length-checker
+   npm install
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Environment Setup**
 
-## Deploy on Vercel
+   ```bash
+   # Create .env.local in the root directory
+   YOUTUBE_API_KEY=your-youtube-api-key
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Run Development Server**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```bash
+   npm run dev
+   ```
+
+4. **Open** [http://localhost:3000](http://localhost:3000)
+
+## 📸 Screenshots
+
+### Main Interface
+
+![Playlist Checker](images/screenshot-main.png)
+
+### Results & Playback Estimates
+
+<div align="center">
+  <img src="images/screenshot-results.png" alt="Results Example" width="500"/>
+  <br>
+  <em>Example showing total duration, video count, and estimated playback times</em>
+</div>
+
+## 🛠️ Tech Stack
+
+* **Next.js 15** - React framework
+* **Tailwind CSS** - Styling
+* **YouTube Data API v3** - Fetch playlist information
+* **TypeScript** - Type safety
+
+## 🌟 How It Works
+
+1. Enter a YouTube playlist URL
+2. Click **Analyze Playlist**
+3. View results including total duration, number of videos, and estimated finish times at different speeds
+
+---
+
+**Built with ❤️ using Next.js and YouTube API**
