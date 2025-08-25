@@ -1,38 +1,29 @@
 import { type NextRequest, NextResponse } from "next/server"
 
-// Types for YouTube API responses
+// Types
 interface PlaylistSnippet {
   title: string
 }
-
 interface PlaylistItem {
-  snippet: PlaylistSnippet
+  contentDetails: { videoId: string }
 }
-
 interface PlaylistResponse {
-  items?: PlaylistItem[]
+  items?: { snippet: PlaylistSnippet }[]
 }
-
-interface VideoContentDetails {
-  contentDetails: {
-    videoId: string
-    duration: string
-  }
-}
-
 interface PlaylistItemsResponse {
-  items?: VideoContentDetails[]
+  items?: PlaylistItem[]
   nextPageToken?: string
 }
-
+interface VideoItem {
+  contentDetails: { duration: string }
+}
 interface VideosResponse {
-  items?: VideoContentDetails[]
+  items?: VideoItem[]
 }
 
 export async function POST(request: NextRequest) {
   try {
     const { playlistId } = await request.json()
-
     if (!playlistId) {
       return NextResponse.json({ error: "Playlist ID is required" }, { status: 400 })
     }
@@ -42,52 +33,50 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "YouTube API key not configured" }, { status: 500 })
     }
 
-    // Get playlist details
+    // Get playlist title
     const playlistResponse = await fetch(
       `https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${apiKey}`
     )
     const playlistData: PlaylistResponse = await playlistResponse.json()
-
-    if (!playlistData.items || playlistData.items.length === 0) {
+    if (!playlistData.items?.length) {
       return NextResponse.json({ error: "Playlist not found" }, { status: 404 })
     }
-
     const playlistTitle = playlistData.items[0].snippet.title
 
-    // Get all videos in the playlist
-    let allVideos: VideoContentDetails[] = []
+    // Fetch all video IDs
+    let videoIds: string[] = []
     let nextPageToken = ""
-
     do {
       const videosResponse = await fetch(
         `https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&playlistId=${playlistId}&maxResults=50&pageToken=${nextPageToken}&key=${apiKey}`
       )
       const videosData: PlaylistItemsResponse = await videosResponse.json()
-
       if (videosData.items) {
-        allVideos = allVideos.concat(videosData.items)
+        videoIds = videoIds.concat(videosData.items.map(v => v.contentDetails.videoId))
       }
-
       nextPageToken = videosData.nextPageToken || ""
     } while (nextPageToken)
 
-    // Get video durations
-    const videoIds = allVideos.map((video) => video.contentDetails.videoId).join(",")
-    const durationsResponse = await fetch(
-      `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds}&key=${apiKey}`
-    )
-    const durationsData: VideosResponse = await durationsResponse.json()
-
-    // Calculate total duration
-    const totalSeconds = durationsData.items?.reduce((acc, video) => {
-      return acc + parseDuration(video.contentDetails.duration)
-    }, 0) || 0
+    // Fetch durations in chunks of 50
+    let totalSeconds = 0
+    for (let i = 0; i < videoIds.length; i += 50) {
+      const chunk = videoIds.slice(i, i + 50).join(",")
+      const durationsResponse = await fetch(
+        `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${chunk}&key=${apiKey}`
+      )
+      const durationsData: VideosResponse = await durationsResponse.json()
+      if (durationsData.items) {
+        for (const video of durationsData.items) {
+          totalSeconds += parseDuration(video.contentDetails.duration)
+        }
+      }
+    }
 
     const totalDuration = formatDuration(totalSeconds)
 
     return NextResponse.json({
       title: playlistTitle,
-      totalVideos: allVideos.length,
+      totalVideos: videoIds.length,
       totalDuration,
       totalSeconds,
     })
@@ -97,23 +86,20 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Parse ISO 8601 duration (PT#H#M#S) into seconds
+// Parse ISO 8601 -> seconds
 function parseDuration(duration: string): number {
   const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
   if (!match) return 0
-
-  const hours = Number.parseInt(match[1] || "0", 10)
-  const minutes = Number.parseInt(match[2] || "0", 10)
-  const seconds = Number.parseInt(match[3] || "0", 10)
-
+  const hours = parseInt(match[1] || "0", 10)
+  const minutes = parseInt(match[2] || "0", 10)
+  const seconds = parseInt(match[3] || "0", 10)
   return hours * 3600 + minutes * 60 + seconds
 }
 
-// Format seconds to "Xh Ym Zs" or "Ym Zs"
+// Format seconds nicely
 function formatDuration(totalSeconds: number): string {
   const hours = Math.floor(totalSeconds / 3600)
   const minutes = Math.floor((totalSeconds % 3600) / 60)
   const seconds = totalSeconds % 60
-
   return hours > 0 ? `${hours}h ${minutes}m ${seconds}s` : `${minutes}m ${seconds}s`
 }
